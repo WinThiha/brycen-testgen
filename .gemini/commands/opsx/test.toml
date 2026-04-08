@@ -1,0 +1,3 @@
+description = "Generate an Excel test case file from the current OpenSpec"
+prompt = "Load the tests generation skill and execute it."
+skill = "generate-tests"

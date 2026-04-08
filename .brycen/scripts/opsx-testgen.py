@@ -1,0 +1,109 @@
+import argparse
+import json
+import os
+import shutil
+import sys
+import webbrowser
+from urllib.parse import quote
+from copy import copy
+from openpyxl import load_workbook
+
+MAINTAINER_EMAIL = "your.email@example.com"
+
+def report_error(error_msg):
+    print(f"\n[ERROR] {error_msg}")
+    choice = input("\nAn error occurred during test generation. Would you like to report this to the maintainer? (y/N): ")
+    if choice.lower() == 'y':
+        subject = quote("Brycen TestGen Script Error")
+        body = quote(f"Error: {error_msg}\n\nPython: {sys.version}\nOS: {sys.platform}")
+        webbrowser.open(f"mailto:{MAINTAINER_EMAIL}?subject={subject}&body={body}")
+
+def generate_tests(input_json, template_path, output_path):
+    # JSON data validation
+    try:
+        with open(input_json, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as e:
+        raise Exception(f"Error reading JSON: {e}")
+
+    if 'tests' not in data:
+        raise Exception("Invalid JSON format: missing 'tests' key.")
+
+    # Template copying logic
+    if not os.path.exists(template_path):
+        raise Exception(f"Template not found: {template_path}")
+
+    shutil.copyfile(template_path, output_path)
+    print(f"Created new file from template: {output_path}")
+
+    # Load the new workbook
+    try:
+        wb = load_workbook(output_path)
+        ws = wb.active
+    except Exception as e:
+        raise Exception(f"Error loading workbook: {e}")
+
+    # Column Mapping based on template analysis (Row 6 headers)
+    COL_NO = 1
+    COL_CLASS = 3
+    COL_CONTENT = 8
+    COL_METHOD = 13
+    COL_RESULT = 24
+
+    # Data starts at row 7 as requested
+    start_row = 7
+    # Reference row for styles (Row 11 has good formatting examples)
+    ref_row = 11
+    
+    # Pre-load styles from reference row for each target column
+    styles = {}
+    for col in [COL_NO, COL_CLASS, COL_CONTENT, COL_METHOD, COL_RESULT]:
+        ref_cell = ws.cell(row=ref_row, column=col)
+        styles[col] = {
+            'alignment': copy(ref_cell.alignment),
+            'font': copy(ref_cell.font),
+            'border': copy(ref_cell.border),
+            'fill': copy(ref_cell.fill),
+            'number_format': ref_cell.number_format
+        }
+
+    for i, test in enumerate(data['tests'], start=1):
+        current_row = start_row + i - 1
+        
+        mapping = {
+            COL_NO: i,
+            COL_CLASS: test.get('Classification', ''),
+            COL_CONTENT: test.get('Content', ''),
+            COL_METHOD: test.get('Test method', ''),
+            COL_RESULT: test.get('Test result', '')
+        }
+
+        for col, value in mapping.items():
+            cell = ws.cell(row=current_row, column=col, value=value)
+            # Apply template styles
+            if col in styles:
+                cell.alignment = styles[col]['alignment']
+                cell.font = styles[col]['font']
+                cell.border = styles[col]['border']
+                cell.fill = styles[col]['fill']
+                cell.number_format = styles[col]['number_format']
+
+    try:
+        wb.save(output_path)
+    except Exception as e:
+        raise Exception(f"Error saving workbook: {e}")
+
+    print(f"Successfully wrote {len(data['tests'])} test cases to {output_path}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate Excel test cases from JSON.")
+    parser.add_argument("--input", required=True, help="Path to input JSON file")
+    parser.add_argument("--template", required=True, help="Path to Excel template file")
+    parser.add_argument("--output", required=True, help="Path to output Excel file")
+
+    args = parser.parse_args()
+    try:
+        generate_tests(args.input, args.template, args.output)
+    except Exception as e:
+        report_error(str(e))
+        sys.exit(1)
