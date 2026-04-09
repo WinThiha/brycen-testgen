@@ -28,6 +28,7 @@ Format the generated test cases into a JSON structure exactly as follows:
 {
   "tests": [
     {
+      "selected": true,
       "Classification": "Feature or Menu Name",
       "Content": "What is being tested",
       "Test method": "Step-by-step instructions",
@@ -39,8 +40,16 @@ Format the generated test cases into a JSON structure exactly as follows:
 
 Write this JSON to a temporary file named `temp_tests.json` in the project root.
 
-## Step 4: Execution
-After writing `temp_tests.json`, you MUST execute the following shell command to generate the Excel file. 
+## Step 4: Review Step
+Before generating the Excel file, you MUST pause and allow the user to review the generated test cases.
+Use the `ask_user` tool with the following prompt:
+*"I've generated {{count}} test cases in `temp_tests.json`. Please review the file and change `"selected": true` to `false` for any cases you'd like to exclude. Ready to generate the Excel file?"*
+
+Wait for the user's confirmation before proceeding to Step 5.
+
+## Step 5: Execution
+After the user confirms, you MUST execute the following shell command to generate the Excel file.
+The Python script will automatically filter out any test cases where `"selected"` is `false`.
 
 **STRICT EXECUTION ORDER**:
 1. Check if the project is on Windows or Unix.

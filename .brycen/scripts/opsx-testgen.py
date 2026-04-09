@@ -7,6 +7,7 @@ import webbrowser
 from urllib.parse import quote
 from copy import copy
 from openpyxl import load_workbook
+from openpyxl.worksheet.datavalidation import DataValidation
 
 MAINTAINER_EMAIL = "your.email@example.com"
 
@@ -28,6 +29,16 @@ def generate_tests(input_json, template_path, output_path):
 
     if 'tests' not in data:
         raise Exception("Invalid JSON format: missing 'tests' key.")
+
+    # Filter tests based on the "selected" boolean (default to True if missing)
+    all_tests = data['tests']
+    selected_tests = [t for t in all_tests if t.get('selected', True)]
+    
+    if not selected_tests:
+        print("No tests selected (all 'selected' fields are false or no tests provided). Aborting.")
+        return
+    
+    data['tests'] = selected_tests
 
     # Template copying logic
     if not os.path.exists(template_path):
@@ -87,6 +98,23 @@ def generate_tests(input_json, template_path, output_path):
                 cell.border = styles[col]['border']
                 cell.fill = styles[col]['fill']
                 cell.number_format = styles[col]['number_format']
+
+    # Re-inject Data Validation (dropdowns) that openpyxl stripped
+    try:
+        last_row = start_row + len(data['tests']) - 1
+        
+        # 1. Tester Dropdown (Column AI = 35) referencing List sheet Column B
+        dv_tester = DataValidation(type="list", formula1="List!$B$1:$B$20", allow_blank=True)
+        ws.add_data_validation(dv_tester)
+        dv_tester.add(f"AI{start_row}:AI{last_row}")
+        
+        # 2. Result Dropdown (Column AM = 39) referencing List sheet Column A
+        dv_result = DataValidation(type="list", formula1="List!$A$1:$A$10", allow_blank=True)
+        ws.add_data_validation(dv_result)
+        dv_result.add(f"AM{start_row}:AM{last_row}")
+        
+    except Exception as e:
+        print(f"Warning: Could not re-inject dropdowns: {e}")
 
     try:
         wb.save(output_path)
