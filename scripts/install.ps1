@@ -72,24 +72,37 @@ Write-Host "`n[4/4] Configuring AI assistants (Fetching from Hub)..."
 # Fetch Core Engine
 Fetch-File ".brycen/scripts/opsx-testgen.py" ".brycen/scripts/opsx-testgen.py"
 Fetch-File ".brycen/templates/Test Case - Function.xlsx" ".brycen/templates/Test Case - Function.xlsx"
+Fetch-File "VERSION" ".brycen/VERSION"
 
 # Smart AI Detection
 if (Test-Path ".gemini") {
     Write-Host "Detected Gemini CLI. Installing commands and skills..."
     Fetch-File ".gemini/commands/brycen/generate_tests.toml" ".gemini/commands/brycen/generate_tests.toml"
     Fetch-File ".gemini/skills/brycen-generate_tests/SKILL.md" ".gemini/skills/brycen-generate_tests/SKILL.md"
+    Fetch-File ".gemini/commands/brycen/update.toml" ".gemini/commands/brycen/update.toml"
+    Fetch-File ".gemini/skills/brycen-update/SKILL.md" ".gemini/skills/brycen-update/SKILL.md"
+    Fetch-File ".gemini/commands/brycen/clean_up.toml" ".gemini/commands/brycen/clean_up.toml"
+    Fetch-File ".gemini/skills/brycen-clean_up/SKILL.md" ".gemini/skills/brycen-clean_up/SKILL.md"
 }
 
 if (Test-Path ".claude") {
     Write-Host "Detected Claude CLI. Installing commands and skills..."
     Fetch-File ".claude/commands/brycen/generate_tests.md" ".claude/commands/brycen/generate_tests.md"
     Fetch-File ".claude/skills/brycen-generate_tests/SKILL.md" ".claude/skills/brycen-generate_tests/SKILL.md"
+    Fetch-File ".claude/commands/brycen/update.md" ".claude/commands/brycen/update.md"
+    Fetch-File ".claude/skills/brycen-update/SKILL.md" ".claude/skills/brycen-update/SKILL.md"
+    Fetch-File ".claude/commands/brycen/clean_up.md" ".claude/commands/brycen/clean_up.md"
+    Fetch-File ".claude/skills/brycen-clean_up/SKILL.md" ".claude/skills/brycen-clean_up/SKILL.md"
 }
 
 if (Test-Path ".opencode") {
     Write-Host "Detected OpenCode CLI. Installing commands and skills..."
     Fetch-File ".opencode/command/brycen-generate_tests.md" ".opencode/command/brycen-generate_tests.md"
     Fetch-File ".opencode/skills/brycen-generate_tests/SKILL.md" ".opencode/skills/brycen-generate_tests/SKILL.md"
+    Fetch-File ".opencode/command/brycen-update.md" ".opencode/command/brycen-update.md"
+    Fetch-File ".opencode/skills/brycen-update/SKILL.md" ".opencode/skills/brycen-update/SKILL.md"
+    Fetch-File ".opencode/command/brycen-clean_up.md" ".opencode/command/brycen-clean_up.md"
+    Fetch-File ".opencode/skills/brycen-clean_up/SKILL.md" ".opencode/skills/brycen-clean_up/SKILL.md"
 }
 
 Write-Host "`n=== Installation Complete! ===" -ForegroundColor Green

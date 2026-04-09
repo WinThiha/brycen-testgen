@@ -67,24 +67,37 @@ echo -e "\n[4/4] Configuring AI assistants (Fetching from Hub)..."
 # Fetch Core Engine
 fetch_file ".brycen/scripts/opsx-testgen.py" ".brycen/scripts/opsx-testgen.py"
 fetch_file ".brycen/templates/Test Case - Function.xlsx" ".brycen/templates/Test Case - Function.xlsx"
+fetch_file "VERSION" ".brycen/VERSION"
 
 # Smart AI Detection
 if [ -d ".gemini" ]; then
     echo "Detected Gemini CLI. Installing commands and skills..."
     fetch_file ".gemini/commands/brycen/generate_tests.toml" ".gemini/commands/brycen/generate_tests.toml"
     fetch_file ".gemini/skills/brycen-generate_tests/SKILL.md" ".gemini/skills/brycen-generate_tests/SKILL.md"
+    fetch_file ".gemini/commands/brycen/update.toml" ".gemini/commands/brycen/update.toml"
+    fetch_file ".gemini/skills/brycen-update/SKILL.md" ".gemini/skills/brycen-update/SKILL.md"
+    fetch_file ".gemini/commands/brycen/clean_up.toml" ".gemini/commands/brycen/clean_up.toml"
+    fetch_file ".gemini/skills/brycen-clean_up/SKILL.md" ".gemini/skills/brycen-clean_up/SKILL.md"
 fi
 
 if [ -d ".claude" ]; then
     echo "Detected Claude CLI. Installing commands and skills..."
     fetch_file ".claude/commands/brycen/generate_tests.md" ".claude/commands/brycen/generate_tests.md"
     fetch_file ".claude/skills/brycen-generate_tests/SKILL.md" ".claude/skills/brycen-generate_tests/SKILL.md"
+    fetch_file ".claude/commands/brycen/update.md" ".claude/commands/brycen/update.md"
+    fetch_file ".claude/skills/brycen-update/SKILL.md" ".claude/skills/brycen-update/SKILL.md"
+    fetch_file ".claude/commands/brycen/clean_up.md" ".claude/commands/brycen/clean_up.md"
+    fetch_file ".claude/skills/brycen-clean_up/SKILL.md" ".claude/skills/brycen-clean_up/SKILL.md"
 fi
 
 if [ -d ".opencode" ]; then
     echo "Detected OpenCode CLI. Installing commands and skills..."
     fetch_file ".opencode/command/brycen-generate_tests.md" ".opencode/command/brycen-generate_tests.md"
     fetch_file ".opencode/skills/brycen-generate_tests/SKILL.md" ".opencode/skills/brycen-generate_tests/SKILL.md"
+    fetch_file ".opencode/command/brycen-update.md" ".opencode/command/brycen-update.md"
+    fetch_file ".opencode/skills/brycen-update/SKILL.md" ".opencode/skills/brycen-update/SKILL.md"
+    fetch_file ".opencode/command/brycen-clean_up.md" ".opencode/command/brycen-clean_up.md"
+    fetch_file ".opencode/skills/brycen-clean_up/SKILL.md" ".opencode/skills/brycen-clean_up/SKILL.md"
 fi
 
 echo -e "\n=== Installation Complete! ==="
