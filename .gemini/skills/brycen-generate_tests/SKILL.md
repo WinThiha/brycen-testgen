@@ -21,11 +21,30 @@ Analyze the Acceptance Criteria and Scenarios in the identified specs. Generate 
 2. Negative (Error) cases.
 3. Boundary (Limit) cases.
 
-## Step 3: Structured Output
+## Step 3: Collect Metadata
+Before generating test cases, you MUST ask the user for the following information:
+- **Author**: The name of the person responsible for these test cases
+- **System Name**: The name of the system under test (e.g., "Order Management System")
+- **Sub System Name**: The name of the subsystem being tested (e.g., "Order Creation")
+
+Use the `ask_user` tool with this prompt:
+*"Before generating test cases, please provide the following information:*
+*1. **Author** (your name):*
+*2. **System Name** (e.g., Order Management System):*
+*3. **Sub System Name** (e.g., Order Creation):"*
+
+Wait for the user to provide all three values before proceeding.
+
+## Step 4: Structured Output
 Format the generated test cases into a JSON structure exactly as follows:
 
 ```json
 {
+  "meta": {
+    "systemName": "<user-provided system name>",
+    "subSystemName": "<user-provided sub system name>",
+    "author": "<user-provided author>"
+  },
   "tests": [
     {
       "selected": true,
@@ -40,14 +59,14 @@ Format the generated test cases into a JSON structure exactly as follows:
 
 Write this JSON to a temporary file named `temp_tests.json` in the project root.
 
-## Step 4: Review Step
+## Step 5: Review Step
 Before generating the Excel file, you MUST pause and allow the user to review the generated test cases.
 Use the `ask_user` tool with the following prompt:
 *"I've generated {{count}} test cases in `temp_tests.json`. Please review the file and change `"selected": true` to `false` for any cases you'd like to exclude. Ready to generate the Excel file?"*
 
-Wait for the user's confirmation before proceeding to Step 5.
+Wait for the user's confirmation before proceeding to Step 6.
 
-## Step 5: Execution
+## Step 6: Execution
 After the user confirms, you MUST execute the following shell command to generate the Excel file.
 The Python script will automatically filter out any test cases where `"selected"` is `false`.
 

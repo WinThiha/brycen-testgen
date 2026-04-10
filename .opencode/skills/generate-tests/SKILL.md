@@ -21,13 +21,33 @@ Analyze the Acceptance Criteria and Scenarios in the identified specs. Generate 
 2. Negative (Error) cases.
 3. Boundary (Limit) cases.
 
-## Step 3: Structured Output
+## Step 3: Collect Metadata
+Before generating test cases, you MUST ask the user for the following information:
+- **Author**: The name of the person responsible for these test cases
+- **System Name**: The name of the system under test (e.g., "Order Management System")
+- **Sub System Name**: The name of the subsystem being tested (e.g., "Order Creation")
+
+Use the `ask_user` tool (or equivalent for OpenCode) with this prompt:
+*"Before generating test cases, please provide the following information:*
+*1. **Author** (your name):*
+*2. **System Name** (e.g., Order Management System):*
+*3. **Sub System Name** (e.g., Order Creation):"*
+
+Wait for the user to provide all three values before proceeding.
+
+## Step 4: Structured Output
 Format the generated test cases into a JSON structure exactly as follows:
 
 ```json
 {
+  "meta": {
+    "systemName": "<user-provided system name>",
+    "subSystemName": "<user-provided sub system name>",
+    "author": "<user-provided author>"
+  },
   "tests": [
     {
+      "selected": true,
       "Classification": "Feature or Menu Name",
       "Content": "What is being tested",
       "Test method": "Step-by-step instructions",
@@ -39,7 +59,7 @@ Format the generated test cases into a JSON structure exactly as follows:
 
 Write this JSON to a temporary file named `temp_tests.json` in the project root.
 
-## Step 4: Execution
+## Step 5: Execution
 After writing `temp_tests.json`, you MUST execute the following shell command to generate the Excel file:
 
 ```bash

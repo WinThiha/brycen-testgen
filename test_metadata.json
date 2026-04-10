@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "systemName": "Test System",
+    "subSystemName": "Test Subsystem",
+    "author": "Test Author"
+  },
+  "tests": [
+    {
+      "selected": true,
+      "Classification": "Test Feature",
+      "Content": "Test content",
+      "Test method": "Test method",
+      "Test result": "Test result"
+    }
+  ]
+}
