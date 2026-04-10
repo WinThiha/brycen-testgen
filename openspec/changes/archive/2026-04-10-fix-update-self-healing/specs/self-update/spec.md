@@ -1,7 +1,7 @@
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: Self-Update via CLI
-The system SHALL provide a mechanism to update the project components from the remote repository.
+The system SHALL provide a mechanism to update the project components from the remote repository by fetching the installer script on-demand from GitHub before executing it.
 
 #### Scenario: Check for update (up-to-date)
 - **WHEN** the user runs `/brycen:update` and the local `.brycen/VERSION` matches the remote version
@@ -26,10 +26,3 @@ The system SHALL provide a mechanism to update the project components from the r
 #### Scenario: Execution fallback when local script exists
 - **WHEN** the user confirms an update AND the local `scripts/install.ps1` (Windows) or `scripts/install.sh` (Unix) exists
 - **THEN** the system MUST still use the remote-fetch approach to ensure the latest installer logic is used
-
-### Requirement: Version Tracking
-The system SHALL track the local version in a dedicated file.
-
-#### Scenario: Initial Version setup
-- **WHEN** the project is first installed or updated
-- **THEN** the system MUST create or update the `.brycen/VERSION` file with the latest version string
